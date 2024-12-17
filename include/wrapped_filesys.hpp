@@ -100,8 +100,8 @@ using Strings = Vec<String>;
 using IStream = std::istream;
 using OStream = std::ostream;
 using FStream = std::fstream;
-using IfStream = std::ifstream;
-using OfStream = std::ofstream;
+using IFStream = std::ifstream;
+using OFStream = std::ofstream;
 using Exception = std::runtime_error;
 
 constexpr uint _BUFFER_SIZE = 4096;
@@ -807,7 +807,7 @@ public:
 
     static File fromDiskPath(const String& filename)
     {
-        std::ifstream ifs(filename, std::ios_base::binary);
+        IFStream ifs(filename, std::ios_base::binary);
 
         if (!ifs.is_open())
             throw Exception(_fmt("Failed to open the file: \"{}\"", filename));
@@ -840,7 +840,7 @@ public:
         }
     }
 
-    void write(std::ostream& os) const
+    void write(OStream& os) const
     {
         if (data_)
             os << *data_;
@@ -908,7 +908,7 @@ public:
         return *this;
     }
 
-    File& operator<<(std::istream& is)
+    File& operator<<(IStream& is)
     {
         is.seekg(0, std::ios_base::end);
         size_t size = is.tellg();
@@ -951,7 +951,7 @@ public:
         return *this;
     }
 
-    const File& operator>>(std::ostream& os) const
+    const File& operator>>(OStream& os) const
     {
         write(os);
         return *this;
