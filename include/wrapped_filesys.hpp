@@ -38,18 +38,17 @@
 //
 // #define WFS_FWD
 // #include <wrapped_filesys.hpp>
-//
 
 #ifndef WRAPPED_FILESYS_HPP
 #define WRAPPED_FILESYS_HPP
 
-#include <cstddef>  // size_t
-#include <string>
-#include <vector>
-#include <iostream>
-#include <sstream>  // stringstream
-#include <fstream>
-#include <stdexcept>
+#include <cstddef>      // size_t
+#include <string>       // string
+#include <vector>       // vector
+#include <iostream>     // istream, ostream
+#include <sstream>      // stringstream
+#include <fstream>      // ifstream, ofstream
+#include <stdexcept>    // runtime_error
 
 // Compiler version.
 #ifdef _MSVC_LANG
@@ -89,26 +88,26 @@ namespace wfs
 namespace wfs
 {
 
-using uchar = unsigned char;
-using uint = unsigned int;
+using uchar     = unsigned char;
+using uint      = unsigned int;
 
 template <typename T>
-using Vec = std::vector<T>;
+using Vec       = std::vector<T>;
 
-using String = std::string;
-using Strings = Vec<String>;
-using IStream = std::istream;
-using OStream = std::ostream;
-using FStream = std::fstream;
-using IFStream = std::ifstream;
-using OFStream = std::ofstream;
+using String    = std::string;
+using Strings   = Vec<String>;
+using IStream   = std::istream;
+using OStream   = std::ostream;
+using FStream   = std::fstream;
+using IFStream  = std::ifstream;
+using OFStream  = std::ofstream;
 using Exception = std::runtime_error;
 
 constexpr uint _BUFFER_SIZE = 4096;
 
 // Preferred path separator.
-constexpr char WIN_PATH_SEPARATOR = '\\';
-constexpr char LINUX_PATH_SEPARATOR = '/';
+constexpr char WIN_PATH_SEPARATOR       = '\\';
+constexpr char LINUX_PATH_SEPARATOR     = '/';
 #ifdef _WIN32
 constexpr char PREFERRED_PATH_SEPARATOR = WIN_PATH_SEPARATOR;
 #else
