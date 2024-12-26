@@ -1,7 +1,7 @@
-// The "Wrapped FileSys" library written in c++.
+// The "Wrapped FileSys" library, in c++.
 //
 // Web: https://github.com/JaderoChan/WrappedFilesys
-// You can contact me at: c_dl_cn@outlook.com
+// You can contact me by email: c_dl_cn@outlook.com
 //
 // MIT License
 //
