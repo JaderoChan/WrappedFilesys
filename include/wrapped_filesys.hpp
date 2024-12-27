@@ -784,7 +784,7 @@ class File
 public:
     File() = default;
 
-    explicit File(const String& name) { setName(name); }
+    ~File() { releaseData(); }
 
     File(const File& other)
     {
@@ -802,7 +802,19 @@ public:
         other.data_ = nullptr;
     }
 
-    ~File() { releaseData(); }
+    File& operator=(const File& other)
+    {
+        name_ = other.name_;
+
+        releaseData();
+
+        if (other.data_)
+            data_ = new String(*other.data_);
+
+        return *this;
+    }
+
+    explicit File(const String& name) { setName(name); }
 
     static File fromDiskPath(const String& filename)
     {
@@ -861,18 +873,6 @@ public:
         write(ofs);
 
         ofs.close();
-    }
-
-    File& operator=(const File& other)
-    {
-        name_ = other.name_;
-
-        releaseData();
-
-        if (other.data_)
-            data_ = new String(*other.data_);
-
-        return *this;
     }
 
     File& operator=(const String& data)
@@ -966,7 +966,7 @@ class Dir
 public:
     Dir() = default;
 
-    explicit Dir(const String& name) { setName(name); }
+    ~Dir() { clear(); }
 
     Dir(const Dir& other)
     {
@@ -990,7 +990,22 @@ public:
         other.subDirs_ = nullptr;
     }
 
-    ~Dir() { clear(); }
+    Dir& operator=(const Dir& other)
+    {
+        name_ = other.name_;
+
+        clear();
+
+        if (other.subFiles_)
+            subFiles_ = new Vec<File>(*other.subFiles_);
+
+        if (other.subDirs_)
+            subDirs_ = new Vec<Dir>(*other.subDirs_);
+
+        return *this;
+    }
+
+    explicit Dir(const String& name) { setName(name); }
 
     static Dir fromDiskPath(const String& dirpath)
     {
@@ -1234,21 +1249,6 @@ public:
     }
 
     Dir copy() const { return Dir(*this); }
-
-    Dir& operator=(const Dir& other)
-    {
-        name_ = other.name_;
-
-        clear();
-
-        if (other.subFiles_)
-            subFiles_ = new Vec<File>(*other.subFiles_);
-
-        if (other.subDirs_)
-            subDirs_ = new Vec<Dir>(*other.subDirs_);
-
-        return *this;
-    }
 
     Dir& operator[](const String& name) { return dir(name); }
 
