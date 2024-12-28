@@ -2,7 +2,7 @@
 //
 // Web: https://github.com/JaderoChan/WrappedFilesys
 // You can contact me by email: c_dl_cn@outlook.com
-//
+
 // MIT License
 //
 // Copyright (c) 2024 頔珞JaderoChan
@@ -123,15 +123,15 @@ constexpr const char* FILENAME_INVALID_CHARS = "\\/:*?\"<>|";
 namespace wfs
 {
 
-// @brief Concatenate two paths.
-// @note Based on the string operation, not actual file system.
+/// @brief Concatenate two paths.
+/// @note Based on the string operation, not actual file system.
 inline String pathcat(const String& path1, const String& path2)
 {
     return path1 + PREFERRED_PATH_SEPARATOR + path2;
 }
 
-// @brief Concatenate multiple paths.
-// @note Based on the string operation, not actual file system.
+/// @brief Concatenate multiple paths.
+/// @note Based on the string operation, not actual file system.
 template <typename... Args>
 String pathcat(const String& path1, const String& path2, Args&&... paths)
 {
@@ -141,10 +141,10 @@ String pathcat(const String& path1, const String& path2, Args&&... paths)
         return pathcat(pathcat(path1, path2), std::forward<Args>(paths)...);
 }
 
-// @brief Check if the filename is valid.
+/// @brief Check if the filename is valid.
 // (not empty, not ".", "..", and not contain invalid characters)
-// @note Invalid characters: \/:*?\"<>|
-// @note Based on the string operation, not actual file system.
+/// @note Invalid characters: \/:*?\"<>|
+/// @note Based on the string operation, not actual file system.
 inline bool isValidFilename(const String& filename)
 {
     // Filename can't be empty.
@@ -162,8 +162,8 @@ inline bool isValidFilename(const String& filename)
     return true;
 }
 
-// @brief Quote the path with double quotes.
-// @note Based on the string operation, not actual file system.
+/// @brief Quote the path with double quotes.
+/// @note Based on the string operation, not actual file system.
 inline String quotePath(const String& path)
 {
     return "\"" + path + "\"";
@@ -283,34 +283,34 @@ namespace wfs
 
 #ifndef WFS_IMPL
 
-// @return The normalized path.
-// @note Based on the string operation, not actual file system.
+/// @return The normalized path.
+/// @note Based on the string operation, not actual file system.
 // @example "C:\\\\path\/to/////file.ext" -> "C:/path/to/file.ext"
 // @example "C:/path/to/subpath/"         -> "C:/path/to/subpath/"
 // @example "C:/path/to/subpath"          -> "C:/path/to/subpath"
 WFS_API String normalize(const String& path);
 
-// @return The current path.
+/// @return The current path.
 WFS_API String currentPath();
 
-// @brief Get the path of the parent directory.
-// @note Based on the string operation, not actual file system.
+/// @brief Get the path of the parent directory.
+/// @note Based on the string operation, not actual file system.
 // @example "C:/path/to/file.ext" -> "C:/path/to"
 // @example "C:/path/to/"         -> "C:/path/to"
 // @example "C:/path/to"          -> "C:/path"
 // @example "file.ext"            -> ""
 WFS_API String parentPath(const String& path);
 
-// @brief Get the parent directory name.
-// @note Based on the string operation, not actual file system.
+/// @brief Get the parent directory name.
+/// @note Based on the string operation, not actual file system.
 // @example "C:/path/to/file.ext" -> "to"
 // @example "C:/path/to/"         -> "to"
 // @example "C:/path/to"          -> "path"
 // @example "file.ext"            -> ""
 WFS_API String parentName(const String& path);
 
-// @brief Get the filename with extension of the path.
-// @note Based on the string operation, not actual file system.
+/// @brief Get the filename with extension of the path.
+/// @note Based on the string operation, not actual file system.
 // @example "C:/path/to/file.ext" -> "file.ext"
 // @example "C:/path/to/"         -> ""
 // @example "C:/path/to"          -> "to"
@@ -318,8 +318,8 @@ WFS_API String parentName(const String& path);
 // @example ".ext"                -> ".ext"
 WFS_API String filenameEx(const String& path);
 
-// @brief Get the filename not with extension of the path.
-// @note Based on the string operation, not actual file system.
+/// @brief Get the filename not with extension of the path.
+/// @note Based on the string operation, not actual file system.
 // @example "C:/path/to/file.ext" -> "file"
 // @example "C:/path/to/"         -> ""
 // @example "C:/path/to"          -> "to"
@@ -327,8 +327,8 @@ WFS_API String filenameEx(const String& path);
 // @example ".ext"                -> ".ext"
 WFS_API String filename(const String& path);
 
-// @brief Get the extension of the path.
-// @note Based on the string operation, not actual file system.
+/// @brief Get the extension of the path.
+/// @note Based on the string operation, not actual file system.
 // @example "C:/path/to/file.ext" -> ".ext"
 // @example "C:/path/to/"         -> ""
 // @example "C:/path/to"          -> "to"
@@ -336,28 +336,28 @@ WFS_API String filename(const String& path);
 // @example ".ext"                -> ""
 WFS_API String extension(const String& path);
 
-// @brief Check the path if is exists.
+/// @brief Check the path if is exists.
 WFS_API bool isExists(const String& path);
 
-// @brief Check if the path is a file.
-// @return If the path is exists and path target is a regular file return true, else return false.
+/// @brief Check if the path is a file.
+/// @return If the path is exists and path target is a regular file return true, else return false.
 WFS_API bool isFile(const String& path);
 
-// @brief Check if the path is a directory.
-// @return If the path is exists and path target is a directory return true, else return false.
+/// @brief Check if the path is a directory.
+/// @return If the path is exists and path target is a directory return true, else return false.
 WFS_API bool isDirectory(const String& path);
 
-// @brief Check if the path is a symlink.
-// @return If the path is exists and path target is a symlink return true, else return false.
+/// @brief Check if the path is a symlink.
+/// @return If the path is exists and path target is a symlink return true, else return false.
 WFS_API bool isSymlink(const String& path);
 
-// @brief Check if the path is a empty file or directory.
-// @return If the path is a empty file or directory return true, else return false.
-// @note If the path is not exists, throw exception.
+/// @brief Check if the path is a empty file or directory.
+/// @return If the path is a empty file or directory return true, else return false.
+/// @note If the path is not exists, throw exception.
 WFS_API bool isEmpty(const String& path);
 
-// @brief Check if the path is a sub path of the base path.
-// @note Based on the string operation, not actual file system.
+/// @brief Check if the path is a sub path of the base path.
+/// @note Based on the string operation, not actual file system.
 // @example "C:/path/to/file.ext", "C:/path"           -> true
 // @example "C:/path/to/subpath", "C:/path"            -> true
 // @example "C:/path/to/subpath", "C:/path/to"         -> true
@@ -366,57 +366,57 @@ WFS_API bool isEmpty(const String& path);
 // @example "C:/path/to", "C:/path/to/subpath"         -> false
 WFS_API bool isSubPath(const String& path, const String& base);
 
-// @brief Check if the path is a relative path.
+/// @brief Check if the path is a relative path.
 WFS_API bool isRelative(const String& path);
 
-// @brief Check if the path is a absolute path.
+/// @brief Check if the path is a absolute path.
 WFS_API bool isAbsolute(const String& path);
 
-// @brief Get the relative path from the base path.
+/// @brief Get the relative path from the base path.
 WFS_API String relative(const String& path, const String& base = currentPath());
 
-// @brief Get the absolute path.
+/// @brief Get the absolute path.
 WFS_API String absolute(const String& path);
 
-// @brief Check if two paths is equal.
+/// @brief Check if two paths is equal.
 // @example "C:/path/to/file.ext", "C:/path/to/file.ext"     -> true
 // @example "./path/to/file.ext", "./path/to/../to/file.ext" -> true
 WFS_API bool isEqualPath(const String& path1, const String& path2);
 
-// @brief Check if filesystem entity (file, directory, symlink, hardlink) of two paths is same one.
+/// @brief Check if filesystem entity (file, directory, symlink, hardlink) of two paths is same one.
 WFS_API bool isSameFileSystemEntity(const String& path1, const String& path2);
 
-// @return The size of the file or directory.
+/// @return The size of the file or directory.
 WFS_API size_t sizes(const String& path);
 
-// @brief Create a directory.
-// @return If the directory is existed return false.
-// @note The parent directory must exists.
+/// @brief Create a directory.
+/// @return If the directory is existed return false.
+/// @note The parent directory must exists.
 WFS_API bool createDirectory(const String& path);
 
-// @brief Create a directory tree.
-// @return If the directory is existed return false.
-// @note The parent directory can be not exists (create it automatically).
+/// @brief Create a directory tree.
+/// @return If the directory is existed return false.
+/// @note The parent directory can be not exists (create it automatically).
 WFS_API bool createDirectorys(const String& path);
 
-// @brief Delete a file.
-// @return If the file is deleted return true, else return false.
+/// @brief Delete a file.
+/// @return If the file is deleted return true, else return false.
 WFS_API bool deleteFile(const String& path);
 
-// @brief Recursive delete a file or directory.
-// @return The count of the file deleted.
+/// @brief Recursive delete a file or directory.
+/// @return The count of the file deleted.
 WFS_API size_t deletes(const String& path);
 
-// @brief Copy a file.
+/// @brief Copy a file.
 WFS_API void copyFile(const String& src, const String& dst, bool isOverwrite = false);
 
-// @brief Copy a file or directory.
+/// @brief Copy a file or directory.
 WFS_API void copys(const String& src, const String& dst, bool isOverwrite = false);
 
-// @brief Copy a symlink.
+/// @brief Copy a symlink.
 WFS_API void copySymlink(const String& src, const String& dst);
 
-// @brief Move a file or directory.
+/// @brief Move a file or directory.
 WFS_API void moves(const String& src, const String& dst);
 
 WFS_API void reFilename(const String& path, const String& newFilename);
@@ -425,7 +425,7 @@ WFS_API void reFilenameEx(const String& path, const String& newFilenameEx);
 
 WFS_API void reExtension(const String& path, const String& newExtension);
 
-// @brief Create a symlink for the file or directory.
+/// @brief Create a symlink for the file or directory.
 WFS_API void createSymlink(const String& src, const String& dst);
 
 WFS_API String symlinkTarget(const String& path);
@@ -436,7 +436,7 @@ WFS_API size_t hardlinkCount(const String& path);
 
 WFS_API String tempDirectory();
 
-// @return The pair of the files and drietorys.
+/// @return The pair of the files and drietorys.
 WFS_API std::pair<Strings, Strings>
 getAlls(const String& path, bool isRecursive = true, bool (*filter)(const String&) = nullptr);
 
