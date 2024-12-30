@@ -115,7 +115,11 @@ constexpr char PREFERRED_PATH_SEPARATOR = LINUX_PATH_SEPARATOR;
 #endif // _WIN32
 
 // The invalid characters in filename.
+#ifdef _WIN32
 constexpr const char* FILENAME_INVALID_CHARS = "\\/:*?\"<>|";
+#else
+constexpr const char* FILENAME_INVALID_CHARS = "/";
+#endif // _WIN32
 
 } // namespace wfs
 
@@ -143,7 +147,7 @@ String pathcat(const String& path1, const String& path2, Args&&... paths)
 
 /// @brief Check if the filename is valid.
 // (not empty, not ".", "..", and not contain invalid characters)
-/// @note Invalid characters: \/:*?\"<>|
+/// @note Invalid characters: \/:*?\"<>| in windows, and / in Linux and MacOS.
 /// @note Based on the string operation, not actual file system.
 inline bool isValidFilename(const String& filename)
 {
