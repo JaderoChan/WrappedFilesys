@@ -602,28 +602,14 @@ WFS_API size_t deletes(const String& path)
 
 WFS_API void copyFile(const String& src, const String& dst, bool isOverwrite)
 {
-    auto copyOptions = isOverwrite ?
-                       (fs::copy_options::copy_symlinks |
-                        fs::copy_options::create_hard_links |
-                        fs::copy_options::create_symlinks |
-                        fs::copy_options::overwrite_existing |
-                        fs::copy_options::update_existing) :
-                       (fs::copy_options::skip_existing |
-                        fs::copy_options::skip_symlinks);
+    auto copyOptions = isOverwrite ? fs::copy_options::overwrite_existing : fs::copy_options::skip_existing;
 
     fs::copy_file(src, dst, copyOptions);
 }
 
 WFS_API void copys(const String& src, const String& dst, bool isOverwrite)
 {
-    auto copyOptions = isOverwrite ?
-                       (fs::copy_options::copy_symlinks |
-                        fs::copy_options::create_hard_links |
-                        fs::copy_options::create_symlinks |
-                        fs::copy_options::overwrite_existing |
-                        fs::copy_options::update_existing) :
-                       (fs::copy_options::skip_existing |
-                        fs::copy_options::skip_symlinks);
+    auto copyOptions = isOverwrite ? fs::copy_options::overwrite_existing : fs::copy_options::skip_existing;
     copyOptions |= fs::copy_options::recursive;
 
     fs::copy(src, dst, copyOptions);
