@@ -109,16 +109,16 @@ constexpr uint _BUFFER_SIZE = 4096;
 constexpr char WIN_PATH_SEPARATOR       = '\\';
 constexpr char LINUX_PATH_SEPARATOR     = '/';
 #ifdef _WIN32
-constexpr char PREFERRED_PATH_SEPARATOR = WIN_PATH_SEPARATOR;
+    constexpr char PREFERRED_PATH_SEPARATOR = WIN_PATH_SEPARATOR;
 #else
-constexpr char PREFERRED_PATH_SEPARATOR = LINUX_PATH_SEPARATOR;
+    constexpr char PREFERRED_PATH_SEPARATOR = LINUX_PATH_SEPARATOR;
 #endif // _WIN32
 
 // The invalid characters in filename.
 #ifdef _WIN32
-constexpr const char* FILENAME_INVALID_CHARS = "\\/:*?\"<>|";
+    constexpr const char* FILENAME_INVALID_CHARS = "\\/:*?\"<>|";
 #else
-constexpr const char* FILENAME_INVALID_CHARS = "/";
+    constexpr const char* FILENAME_INVALID_CHARS = "/";
 #endif // _WIN32
 
 } // namespace wfs
