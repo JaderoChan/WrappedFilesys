@@ -52,28 +52,28 @@
 
 // Compiler version.
 #ifdef _MSVC_LANG
-#define _WRAPPED_FILESYS_CPPVERS     _MSVC_LANG
+    #define _WRAPPED_FILESYS_CPPVERS     _MSVC_LANG
 #else
-#define _WRAPPED_FILESYS_CPPVERS     __cplusplus
+    #define _WRAPPED_FILESYS_CPPVERS     __cplusplus
 #endif // _MSVC_LANG
 
 #if _WRAPPED_FILESYS_CPPVERS < 201103L
-#error "The wrapped_filesys library just useable in c++11 and above."
+    #error "The wrapped_filesys library just useable in c++11 and above."
 #endif // _WRAPPED_FILESYS_CPPVERS < 201103L
 
 // Check C++17 support.
 #if _WRAPPED_FILESYS_CPPVERS >= 201703L
-#define _WRAPPED_FILESYS_CPP17
+    #define _WRAPPED_FILESYS_CPP17
 #endif // WRAPPED_FILESYS_CPPVERS >= 201703L
 
 #ifdef WFS_IMPL
-#define WFS_API 
+    #define WFS_API 
 #else
-#ifdef WFS_FWD
-#define WFS_API extern
-#else
-#define WFS_API inline
-#endif // WFS_FWD
+    #ifdef WFS_FWD
+        #define WFS_API extern
+    #else
+        #define WFS_API inline
+    #endif // WFS_FWD
 #endif // WFS_IMPL
 
 // Wrapped File System namespace.
@@ -178,7 +178,8 @@ String _fmt(const String& fmt, const T& arg)
 {
     std::stringstream ss;
 
-    if (fmt.size() < 4) {
+    if (fmt.size() < 4)
+    {
         size_t pos = fmt.find("{}");
         if (pos == String::npos)
             return fmt;
@@ -190,22 +191,27 @@ String _fmt(const String& fmt, const T& arg)
     }
 
     String window(4, '\0');
-    for (size_t i = 0; i < fmt.size();) {
+    for (size_t i = 0; i < fmt.size();)
+    {
         window[0] = fmt[i];
         window[1] = i < fmt.size() - 1 ? fmt[i + 1] : '\0';
         window[2] = i < fmt.size() - 2 ? fmt[i + 2] : '\0';
         window[3] = i < fmt.size() - 3 ? fmt[i + 3] : '\0';
 
-        if (window == "{{}}") {
+        if (window == "{{}}")
+        {
             ss << "{}";
             i += 4;
             continue;
         }
 
-        if (window[0] == '{' && window[1] == '}') {
+        if (window[0] == '{' && window[1] == '}')
+        {
             ss << arg;
             return ss.str() + fmt.substr(i + 2);
-        } else {
+        }
+        else
+        {
             ss << window[0];
             i += 1;
             continue;
@@ -220,7 +226,8 @@ String _fmt(const String& fmt, const T& arg, Args&&... args)
 {
     std::stringstream ss;
 
-    if (fmt.size() < 4) {
+    if (fmt.size() < 4)
+    {
         size_t pos = fmt.find("{}");
         if (pos == String::npos)
             return fmt;
@@ -232,22 +239,27 @@ String _fmt(const String& fmt, const T& arg, Args&&... args)
     }
 
     String window(4, '\0');
-    for (size_t i = 0; i < fmt.size();) {
+    for (size_t i = 0; i < fmt.size();)
+    {
         window[0] = fmt[i];
         window[1] = i < fmt.size() - 1 ? fmt[i + 1] : '\0';
         window[2] = i < fmt.size() - 2 ? fmt[i + 2] : '\0';
         window[3] = i < fmt.size() - 3 ? fmt[i + 3] : '\0';
 
-        if (window == "{{}}") {
+        if (window == "{{}}") 
+
             ss << "{}";
             i += 4;
             continue;
         }
 
-        if (window[0] == '{' && window[1] == '}') {
+        if (window[0] == '{' && window[1] == '}')
+        {
             ss << arg;
             return ss.str() + _fmt(fmt.substr(i + 2), std::forward<Args>(args)...);
-        } else {
+        }
+        else
+        {
             ss << window[0];
             i += 1;
             continue;
@@ -260,25 +272,25 @@ String _fmt(const String& fmt, const T& arg, Args&&... args)
 } // namespace wfs
 
 #ifdef _WRAPPED_FILESYS_CPP17
-#ifndef WFS_FWD
-#include <filesystem>
-namespace wfs
-{
+    #ifndef WFS_FWD
+    #include <filesystem>
+    namespace wfs
+    {
 
-namespace fs = std::filesystem;
+    namespace fs = std::filesystem;
 
-}
-#endif // !WFS_FWD
+    }
+    #endif // !WFS_FWD
 #else
-#ifndef WFS_FWD
-#include <ghc/filesystem.hpp>
-namespace wfs
-{
+    #ifndef WFS_FWD
+    #include <ghc/filesystem.hpp>
+    namespace wfs
+    {
 
-namespace fs = ghc::filesystem;
+    namespace fs = ghc::filesystem;
 
-}
-#endif // !WFS_FWD
+    }
+    #endif // !WFS_FWD
 #endif // _WRAPPED_FILESYS_CPP17
 
 // Declaration of utility functions with filesystem.
@@ -527,7 +539,6 @@ WFS_API bool isSubPath(const String& path, const String& base)
 
     if (_path == _base)
         return false;
-
     return _path.substr(0, _base.size()) == _base;
 }
 
@@ -566,16 +577,20 @@ WFS_API bool isSameFileSystemEntity(const String& path1, const String& path2)
 
 WFS_API size_t sizes(const String& path)
 {
-    if (isFile(path)) {
+    if (isFile(path))
+    {
         return fs::file_size(path);
-    } else if (isDirectory(path)) {
+    }
+    else if (isDirectory(path))
+    {
         size_t rslt = 0;
-
         for (const auto& var : fs::recursive_directory_iterator(path))
             rslt += (var.is_regular_file() ? var.file_size() : 0);
 
         return rslt;
-    } else {
+    }
+    else
+    {
         throw Exception(_fmt("The specified path not exists. \"{}\"", path));
     }
 }
@@ -603,7 +618,6 @@ WFS_API size_t deletes(const String& path)
 WFS_API void copyFile(const String& src, const String& dst, bool isOverwrite)
 {
     auto copyOptions = isOverwrite ? fs::copy_options::overwrite_existing : fs::copy_options::skip_existing;
-
     fs::copy_file(src, dst, copyOptions);
 }
 
@@ -611,7 +625,6 @@ WFS_API void copys(const String& src, const String& dst, bool isOverwrite)
 {
     auto copyOptions = isOverwrite ? fs::copy_options::overwrite_existing : fs::copy_options::skip_existing;
     copyOptions |= fs::copy_options::recursive;
-
     fs::copy(src, dst, copyOptions);
 }
 
@@ -682,8 +695,10 @@ getAlls(const String& path, bool isRecursive, bool (*filter)(const String&))
     Strings files;
     Strings dirs;
 
-    if (isRecursive) {
-        for (const auto& var : fs::recursive_directory_iterator(path)) {
+    if (isRecursive)
+    {
+        for (const auto& var : fs::recursive_directory_iterator(path))
+        {
             String _path = var.path().string();
 
             if (var.is_regular_file() && (!filter || filter(_path)))
@@ -692,8 +707,11 @@ getAlls(const String& path, bool isRecursive, bool (*filter)(const String&))
             if (var.is_directory() && (!filter || filter(_path)))
                 dirs.push_back(_path);
         }
-    } else {
-        for (const auto& var : fs::directory_iterator(path)) {
+    }
+    else
+    {
+        for (const auto& var : fs::directory_iterator(path))
+        {
             String _path = var.path().string();
 
             if (var.is_regular_file() && (!filter || filter(_path)))
@@ -714,17 +732,20 @@ WFS_API Strings getAllFiles(const String& path, bool isRecursive, bool (*filter)
 
     Strings files;
 
-    if (isRecursive) {
-        for (const auto& var : fs::recursive_directory_iterator(path)) {
+    if (isRecursive)
+    {
+        for (const auto& var : fs::recursive_directory_iterator(path))
+        {
             String _path = var.path().string();
-
             if (var.is_regular_file() && (!filter || filter(_path)))
                 files.push_back(_path);
         }
-    } else {
-        for (const auto& var : fs::directory_iterator(path)) {
+    }
+    else
+    {
+        for (const auto& var : fs::directory_iterator(path))
+        {
             String _path = var.path().string();
-
             if (var.is_regular_file() && (!filter || filter(_path)))
                 files.push_back(_path);
         }
@@ -740,17 +761,20 @@ WFS_API Strings getAllDirectorys(const String& path, bool isRecursive, bool (*fi
 
     Strings dirs;
 
-    if (isRecursive) {
-        for (const auto& var : fs::recursive_directory_iterator(path)) {
+    if (isRecursive)
+    {
+        for (const auto& var : fs::recursive_directory_iterator(path))
+        {
             String _path = var.path().string();
-
             if (var.is_directory() && (!filter || filter(_path)))
                 dirs.push_back(_path);
         }
-    } else {
-        for (const auto& var : fs::directory_iterator(path)) {
+    }
+    else
+    {
+        for (const auto& var : fs::directory_iterator(path))
+        {
             String _path = var.path().string();
-
             if (var.is_directory() && (!filter || filter(_path)))
                 dirs.push_back(_path);
         }
@@ -779,7 +803,6 @@ public:
     File(const File& other)
     {
         name_ = other.name_;
-
         if (other.data_)
             data_ = new String(*other.data_);
     }
@@ -787,7 +810,6 @@ public:
     File(File&& other) noexcept
     {
         name_ = other.name_;
-
         data_ = other.data_;
         other.data_ = nullptr;
     }
@@ -797,7 +819,6 @@ public:
         name_ = other.name_;
 
         releaseData();
-
         if (other.data_)
             data_ = new String(*other.data_);
 
@@ -835,7 +856,8 @@ public:
 
     void releaseData()
     {
-        if (data_) {
+        if (data_)
+        {
             delete data_;
             data_ = nullptr;
         }
@@ -868,9 +890,7 @@ public:
     File& operator=(const String& data)
     {
         releaseData();
-
         data_ = new String(data);
-
         return *this;
     }
 
@@ -1066,8 +1086,10 @@ public:
         if (hasFile_(name) != NOF_)
             return true;
 
-        if (isRecursive && subDirs_) {
-            for (const auto& var : *subDirs_) {
+        if (isRecursive && subDirs_)
+        {
+            for (const auto& var : *subDirs_)
+            {
                 if (var.hasFile(name, true))
                     return true;
             }
@@ -1081,8 +1103,10 @@ public:
         if (hasDir_(name) != NOF_)
             return true;
 
-        if (isRecursive && subDirs_) {
-            for (const auto& var : *subDirs_) {
+        if (isRecursive && subDirs_)
+        {
+            for (const auto& var : *subDirs_)
+            {
                 if (var.hasDir(name, true))
                     return true;
             }
@@ -1095,7 +1119,6 @@ public:
     {
         if (!isValidFilename(name))
             throw Exception(_fmt("Invalid file name: \"{}\"", name));
-
         name_ = name;
     }
 
@@ -1111,7 +1134,8 @@ public:
     {
         size_t pos = hasFile_(name);
 
-        if (pos == NOF_) {
+        if (pos == NOF_)
+        {
             add(File(name));
             return subFiles_->back();
         }
@@ -1123,7 +1147,8 @@ public:
     {
         size_t pos = hasDir_(name);
 
-        if (pos == NOF_) {
+        if (pos == NOF_)
+        {
             add(Dir(name));
             return subDirs_->back();
         }
@@ -1134,7 +1159,6 @@ public:
     void removeFile(const String& name)
     {
         size_t pos = hasFile_(name);
-
         if (pos == NOF_)
             return;
 
@@ -1144,7 +1168,6 @@ public:
     void removeDir(const String& name)
     {
         size_t pos = hasDir_(name);
-
         if (pos == NOF_)
             return;
 
@@ -1164,7 +1187,8 @@ public:
 
     void clearFiles()
     {
-        if (subFiles_) {
+        if (subFiles_)
+        {
             delete subFiles_;
             subFiles_ = nullptr;
         }
@@ -1172,7 +1196,8 @@ public:
 
     void clearDirs()
     {
-        if (subDirs_) {
+        if (subDirs_)
+        {
             delete subDirs_;
             subDirs_ = nullptr;
         }
@@ -1191,10 +1216,10 @@ public:
 
         size_t pos = hasFile_(file.name());
 
-        if (pos != NOF_) {
+        if (pos != NOF_)
+        {
             if (isOverwrite)
                 (*subFiles_)[pos] = std::move(file);
-
             return;
         }
 
@@ -1208,10 +1233,10 @@ public:
 
         size_t pos = hasDir_(dir.name());
 
-        if (pos != NOF_) {
+        if (pos != NOF_)
+        {
             if (isOverwrite)
                 (*subDirs_)[pos] = std::move(dir);
-
             return;
         }
 
@@ -1273,8 +1298,10 @@ private:
 
     size_t hasFile_(const String& name) const
     {
-        if (subFiles_) {
-            for (size_t i = 0; i < subFiles_->size(); ++i) {
+        if (subFiles_)
+        {
+            for (size_t i = 0; i < subFiles_->size(); ++i)
+            {
                 if ((*subFiles_)[i].name() == name)
                     return i;
             }
@@ -1285,8 +1312,10 @@ private:
 
     size_t hasDir_(const String& name) const
     {
-        if (subDirs_) {
-            for (size_t i = 0; i < subDirs_->size(); ++i) {
+        if (subDirs_)
+        {
+            for (size_t i = 0; i < subDirs_->size(); ++i)
+            {
                 if ((*subDirs_)[i].name() == name)
                     return i;
             }
