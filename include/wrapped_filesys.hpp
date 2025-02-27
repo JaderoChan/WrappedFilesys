@@ -247,7 +247,7 @@ String _fmt(const String& fmt, const T& arg, Args&&... args)
         window[3] = i < fmt.size() - 3 ? fmt[i + 3] : '\0';
 
         if (window == "{{}}") 
-
+        {
             ss << "{}";
             i += 4;
             continue;
@@ -273,23 +273,23 @@ String _fmt(const String& fmt, const T& arg, Args&&... args)
 
 #ifdef _WRAPPED_FILESYS_CPP17
     #ifndef WFS_FWD
-    #include <filesystem>
-    namespace wfs
-    {
+        #include <filesystem>
+        namespace wfs
+        {
 
-    namespace fs = std::filesystem;
+        namespace fs = std::filesystem;
 
-    }
+        }
     #endif // !WFS_FWD
 #else
     #ifndef WFS_FWD
-    #include <ghc/filesystem.hpp>
-    namespace wfs
-    {
+        #include <ghc/filesystem.hpp>
+        namespace wfs
+        {
 
-    namespace fs = ghc::filesystem;
+        namespace fs = ghc::filesystem;
 
-    }
+        }
     #endif // !WFS_FWD
 #endif // _WRAPPED_FILESYS_CPP17
 
