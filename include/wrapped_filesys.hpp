@@ -88,9 +88,6 @@ namespace wfs
 namespace wfs
 {
 
-using uchar     = unsigned char;
-using uint      = unsigned int;
-
 template <typename T>
 using Vec       = std::vector<T>;
 
@@ -103,7 +100,7 @@ using IFStream  = std::ifstream;
 using OFStream  = std::ofstream;
 using Exception = std::runtime_error;
 
-constexpr uint _BUFFER_SIZE = 4096;
+constexpr int _BUFFER_SIZE = 4096;
 
 // Preferred path separator.
 constexpr char WIN_PATH_SEPARATOR       = '\\';
