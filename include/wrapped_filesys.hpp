@@ -43,6 +43,7 @@
 #define WRAPPED_FILESYS_HPP
 
 #include <cstddef>      // size_t
+#include <algorithm>    // min
 #include <string>       // string
 #include <vector>       // vector
 #include <iostream>     // istream, ostream
@@ -104,11 +105,11 @@ constexpr int _BUFFER_SIZE = 4096;
 
 // Preferred path separator.
 constexpr char WIN_PATH_SEPARATOR       = '\\';
-constexpr char LINUX_PATH_SEPARATOR     = '/';
+constexpr char POSIX_PATH_SEPARATOR     = '/';
 #ifdef _WIN32
     constexpr char PREFERRED_PATH_SEPARATOR = WIN_PATH_SEPARATOR;
 #else
-    constexpr char PREFERRED_PATH_SEPARATOR = LINUX_PATH_SEPARATOR;
+    constexpr char PREFERRED_PATH_SEPARATOR = POSIX_PATH_SEPARATOR;
 #endif // _WIN32
 
 // The invalid characters in filename.
@@ -140,6 +141,55 @@ String pathcat(const String& path1, const String& path2, Args&&... paths)
         return pathcat(path1, path2);
     else
         return pathcat(pathcat(path1, path2), std::forward<Args>(paths)...);
+}
+
+inline String intersect(const String& base, const String& path)
+{
+    String result;
+    String mid;
+    size_t len = std::min(base.size(), path.size());
+
+    if (len == 0)
+        return result;
+    else
+        len--;
+
+    for (size_t i = 0; i <= len; ++i)
+    {
+        if (base[i] != path[i])
+            break;
+
+        if (path[i] == WIN_PATH_SEPARATOR || path[i] == POSIX_PATH_SEPARATOR || i == len)
+        {
+            if (result.empty())
+                result = mid;
+            else
+                result = pathcat(result, mid);
+            mid.clear();
+
+            continue;
+        }
+
+        mid += path[i];
+    }
+
+    return result;
+}
+
+inline String subtract(const String& base, const String& path)
+{
+    if (path.empty())
+        return path;
+
+    String temp = intersect(base, path);
+    if (temp.empty())
+        return path;
+
+    size_t pos = temp.size() + 2;
+    if (pos >= path.size())
+        return "";
+
+    return path.substr(pos);
 }
 
 /// @brief Check if the filename is valid.
@@ -467,11 +517,9 @@ namespace wfs
 
 #ifndef WFS_FWD
 
-using _pth = fs::path;
-
 WFS_API String normalize(const String& path)
 {
-    return _pth(path).lexically_normal().generic_string();
+    return fs::path(path).lexically_normal().string();
 }
 
 WFS_API String currentPath()
@@ -481,27 +529,27 @@ WFS_API String currentPath()
 
 WFS_API String parentPath(const String& path)
 {
-    return _pth(path).parent_path().string();
+    return fs::path(path).parent_path().string();
 }
 
 WFS_API String parentName(const String& path)
 {
-    return _pth(path).parent_path().filename().string();
+    return fs::path(path).parent_path().filename().string();
 }
 
 WFS_API String filenameEx(const String& path)
 {
-    return _pth(path).filename().string();
+    return fs::path(path).filename().string();
 }
 
 WFS_API String filename(const String& path)
 {
-    return _pth(path).filename().replace_extension().string();
+    return fs::path(path).filename().replace_extension().string();
 }
 
 WFS_API String extension(const String& path)
 {
-    return _pth(path).extension().string();
+    return fs::path(path).extension().string();
 }
 
 WFS_API bool isExists(const String& path)
@@ -541,12 +589,12 @@ WFS_API bool isSubPath(const String& path, const String& base)
 
 WFS_API bool isRelative(const String& path)
 {
-    return _pth(path).is_relative();
+    return fs::path(path).is_relative();
 }
 
 WFS_API bool isAbsolute(const String& path)
 {
-    return _pth(path).is_absolute();
+    return fs::path(path).is_absolute();
 }
 
 WFS_API String relative(const String& path, const String& base)
@@ -556,7 +604,7 @@ WFS_API String relative(const String& path, const String& base)
 
 WFS_API String absolute(const String& path)
 {
-    return fs::absolute(path).string();
+    return fs::path(path).string();
 }
 
 WFS_API bool isEqualPath(const String& path1, const String& path2)
